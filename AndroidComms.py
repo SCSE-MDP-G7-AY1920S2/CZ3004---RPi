@@ -88,7 +88,7 @@ class AndroidComm(object):
             #Make sure there is a connection first before sending
             if (self.isEstablished):
                 #self.clientSock.send(str(message))
-                print('[BLUETOOTH_INFO] Sent: ' + message)
+                # print('[BLUETOOTH_INFO] Sent: ' + message)
                 self.clientSock.send(message.encode('utf-8'))
                 return
 

@@ -18,7 +18,7 @@ import glob
 #from picamera.array import PiRGBArray
 
 # (Thanks Kaishuo!) Setup to handle cases where serial port jumps to ACM1
-# Run this command via SSH: $ sudo python3 main.py --port `ls /dev/ttyACM*`
+# Run this command via SSH: $ sudo python3 main.py --port /dev/ttyACM0 (or ttyACM1 - check with ls /dev/ttyACM*)
 parser = argparse.ArgumentParser(description='MDP RPi Module')
 parser.add_argument('--port', type=str, default='/dev/ttyACM0', help='Arduino Serial port')
 args = parser.parse_args()
@@ -81,20 +81,19 @@ if __name__ == '__main__':
     index = 0 # Used in IR
     correctImages = []
 
-    while running:
-        message = msgQueue.get()
+    try:
+        while running:
+            message = msgQueue.get()
 
-        if message == None:
-            continue
+            if message == None:
+                continue
 
-        try:
-            logfile.write(message)
-        except Exception as e:
-            print('[LOGFILE_ERROR] Logfile Write Error: %s' % str(e))
-        
-        msgSplit = message.split(';') # Try without semi-colon
+            try:
+                logfile.write(message)
+            except Exception as e:
+                print('[LOGFILE_ERROR] Logfile Write Error: %s' % str(e))
 
-        try:
+            msgSplit = message.split(';') # Try without semi-colon
             # for i, value in enumerate(message):
             for i, value in enumerate(msgSplit):
                 #Skip the first empty string
@@ -254,30 +253,16 @@ if __name__ == '__main__':
                     commsList[ANDROID].write(json.dumps(msg))
 
                 ## Android request for raw images, send them an array of JSON strings
+                ## Update: Change to Applet (WiFi) - Bluetooth will have packet loss since they can receive in max 1KB packets
                 elif msg['com'] == 'imgRaw':
 
-                    # correctImages = SendRawImages(correctImages)
-                    # data = {'com': 'Raw Image String', 'imgRaw': correctImages}
-                    # commsList[ANDROID].write(json.dumps(data))
-
-                    os.chdir("/home/pi/RPi_v2/correct_images")
-
-                    for f_name in glob.glob('*.jpg'):
-                        with open(f_name, "rb") as img_file:
-                            encoded_string = base64.b64encode(img_file.read())
-                            data = {'com': 'Raw Image String', 'imgRaw': str(encoded_string)}
-                            commsList[ANDROID].write(json.dumps(data))
-
-                    os.chdir("/home/pi/RPi_v2")
+                    correctImages = SendRawImages(correctImages)
+                    data = {'com': 'Raw Image String', 'imgRaw': correctImages}
+                    commsList[APPLET].write(json.dumps(data))
 
                 elif com == 'S':
                     #Move backward
                     commsList[ARDUINO].write('S')
-
-                ## Need to modify (KIV)
-                elif msg['com'] == 'T':
-                    commsList[ANDROID].write(';{"com":"statusUpdate", "status":"Disconnecting"}')
-                    sys.exit(0)
 
                 # elif msg['com'] == 'IR':
 				#     commsList[ANDROID].write(';{"com": "statusUpdate", "status": "Running Image Recognition"}')
@@ -299,20 +284,21 @@ if __name__ == '__main__':
 				#     rects.append(rect2)
 				#     rects.append(rect3)
 				#
-				#     for i, rect in enumerate(rects):
-				#        if rect != None:
-				#            image = cv2.rectangle(image, (i * 120 + rect[0], 120 + rect[1]), (i * 120 + rect[2], 120 + rect[3]), (0,255,0), 2)
-				#     cv2.imwrite(str(index) + '.jpg', image)
-				#     index = index + 1
-				#     data = {'com':'Image Taken', 'left': leftprediction,'middle': midprediction, 'right':rightprediction}
-				#     commsList[APPLET].write(json.dumps(data))
-				#     print('Left Prediction: ', leftprediction)
-				#     print('Middle Prediction: ', midprediction)
-				#     print('Right Prediction: ', rightprediction)
-				
-        finally:
-            #commsList[APPLET].write('{"com": "T"}')
-            commsList[ARDUINO].disconnect()
-            commsList[ANDROID].disconnect()
-            commsList[APPLET].disconnect()
-            logfile.close()
+				##     for i, rect in enumerate(rects):
+				##        if rect != None:
+				##           image = cv2.rectangle(image, (i * 120 + rect[0], 120 + rect[1]), (i * 120 + rect[2], 120 + rect[3]), (0,255,0), 2)
+				##     cv2.imwrite(str(index) + '.jpg', image)
+				##     index = index + 1
+                #     data = {'com':'Image Taken', 'left': leftprediction,'middle': midprediction, 'right':rightprediction}
+                #     commsList[APPLET].write(json.dumps(data))
+                #     print('Left Prediction: ', leftprediction)
+                #     print('Middle Prediction: ', midprediction)
+                #     print('Right Prediction: ', rightprediction)
+
+
+    finally:
+        commsList[ARDUINO].disconnect()
+        commsList[ANDROID].disconnect()
+        commsList[APPLET].disconnect()
+        logfile.close()
+        sys.exit(0)

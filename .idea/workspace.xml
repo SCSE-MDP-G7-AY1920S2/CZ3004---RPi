@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="5691b7b5-e933-4172-854d-1260da2b6920" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+    <list default="true" id="5691b7b5-e933-4172-854d-1260da2b6920" name="Default Changelist" comment="Modification to imgRaw function (to modify here in standalone file before implementing in actual function)">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/imgRaw_standalone.py" beforeDir="false" afterPath="$PROJECT_DIR$/imgRaw_standalone.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AndroidComms.py" beforeDir="false" afterPath="$PROJECT_DIR$/AndroidComms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/correct_images/BLOOMIZ I AM.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/correct_images/BLOOMIZ I WAS.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/correct_images/BLOOMIZ I WILL.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/correct_images/IZONE MORE mag 1.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/correct_images/IZONE MORE mag 2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/logs/rpilog2020-02-11 02%3A32%3A40.610732.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -97,8 +103,21 @@
       <workItem from="1581754853827" duration="4485000" />
       <workItem from="1581773865246" duration="626000" />
       <workItem from="1581999959927" duration="8272000" />
-      <workItem from="1582174865345" duration="3811000" />
+      <workItem from="1582174865345" duration="7516000" />
+      <workItem from="1582191252473" duration="688000" />
+      <workItem from="1582245554095" duration="453000" />
+      <workItem from="1582247179966" duration="1783000" />
+      <workItem from="1582507600499" duration="389000" />
+      <workItem from="1582694531459" duration="284000" />
     </task>
+    <task id="LOCAL-00001" summary="Modification to imgRaw function (to modify here in standalone file before implementing in actual function)">
+      <created>1582178957038</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1582178957038</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -109,11 +128,17 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
           </value>
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Modification to imgRaw function (to modify here in standalone file before implementing in actual function)" />
+    <option name="LAST_COMMIT_MESSAGE" value="Modification to imgRaw function (to modify here in standalone file before implementing in actual function)" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/RPi_v2$imgRaw.coverage" NAME="imgRaw Coverage Results" MODIFIED="1581755908212" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
