@@ -86,16 +86,16 @@ class IMAGEREC():
                 # extract the bounding box coordinates
                 # (x, y) = (boxes[i][0], boxes[i][1])
                 # (w, h) = (boxes[i][2], boxes[i][3])
-                print("class", self.LABELS[classIDs[i]], "xc", boxes[i][0], "yc", boxes[i][1],
+                print("class", self.LABELS[classIDs[i]], "xmin", boxes[i][0], "ymin", boxes[i][1],
                       "w", boxes[i][2], "h", boxes[i][3], "area", boxes[i][2] * boxes[i][3])
                 if boxes[i][2] * boxes[i][3] > area and boxes[i][2] * boxes[i][3] > area_threshold:
                     area = boxes[i][2] * boxes[i][3]
                     x, y, w, h = boxes[i][0], boxes[i][1], boxes[i][2], boxes[i][3]
                     index = i
                     chosen_class = self.LABELS[classIDs[index]]
-            print("Chosen class", chosen_class, "xc", x,
-                  "yc", y, "w", w, "h", h, "area", area)
-            xstart, xend = int(x - (w / 2)), int(x + (w / 2))
+            print("Chosen class", chosen_class, "xmin", x,
+                  "ymin", y, "w", w, "h", h, "area", area)
+            # xstart, xend = int(x), int(x + w)
 
             # Fallback if it takes too long - for img position (left, middle, right)
             # if xstart >= 0 and xend < 130:
