@@ -8,10 +8,7 @@ import os
 import json
 import sys
 from datetime import datetime
-from time import sleep
 import argparse
-import base64
-import glob
 #import cv2
 #from picamera import PiCamera
 #from ImageRec import IMAGEREC
@@ -264,37 +261,36 @@ if __name__ == '__main__':
                     #Move backward
                     commsList[ARDUINO].write('S')
 
-                # elif msg['com'] == 'IR':
-				#     commsList[ANDROID].write(';{"com": "statusUpdate", "status": "Running Image Recognition"}')
-				#     commsList[APPLET].write('{"com": "statusUpdate", "status": "Running Image Recognition"}')
-				#
-				# elif msg['com'] == 'I':
-				#      rawCapture = PiRGBArray(camera, size=(390,240))
-				#      camera.capture(rawCapture, format="bgr")
-				#      image = rawCapture.array
-				#      img1 = image[120:, 0:130, :]
-				#      img2 = image[120:, 130:260, :]
-				#      img3 = image[120:, 260:390, :]
-				#      rect1, leftprediction = imageRec.predict(img1)
-				#      rect2, midprediction = imageRec.predict(img2)
-				#      rect3, rightprediction = imageRec.predict(img3)
-				#
-				#     rects = []
-				#     rects.append(rect1)
-				#     rects.append(rect2)
-				#     rects.append(rect3)
-				#
-				##     for i, rect in enumerate(rects):
-				##        if rect != None:
-				##           image = cv2.rectangle(image, (i * 120 + rect[0], 120 + rect[1]), (i * 120 + rect[2], 120 + rect[3]), (0,255,0), 2)
-				##     cv2.imwrite(str(index) + '.jpg', image)
-				##     index = index + 1
+                elif msg['com'] == 'IR':
+                    commsList[ANDROID].write(';{"com": "statusUpdate", "status": "Running Image Recognition"}')
+                    commsList[APPLET].write('{"com": "statusUpdate", "status": "Running Image Recognition"}')
+
+                # elif msg['com'] == 'I':
+                #      rawCapture = PiRGBArray(camera, size=(390,240))
+                #      camera.capture(rawCapture, format="bgr")
+                #      image = rawCapture.array
+                #      img1 = image[120:, 0:130, :]
+                #      img2 = image[120:, 130:260, :]
+                #      img3 = image[120:, 260:390, :]
+                #      rect1, leftprediction = imageRec.predict(img1)
+                #      rect2, midprediction = imageRec.predict(img2)
+                #      rect3, rightprediction = imageRec.predict(img3)
+                #
+                #     rects = []
+                #     rects.append(rect1)
+                #     rects.append(rect2)
+                #     rects.append(rect3)
+                #
+                ##     for i, rect in enumerate(rects):
+                ##        if rect != None:
+                ##           image = cv2.rectangle(image, (i * 120 + rect[0], 120 + rect[1]), (i * 120 + rect[2], 120 + rect[3]), (0,255,0), 2)
+                ##     cv2.imwrite(str(index) + '.jpg', image)
+                ##     index = index + 1
                 #     data = {'com':'Image Taken', 'left': leftprediction,'middle': midprediction, 'right':rightprediction}
                 #     commsList[APPLET].write(json.dumps(data))
                 #     print('Left Prediction: ', leftprediction)
                 #     print('Middle Prediction: ', midprediction)
                 #     print('Right Prediction: ', rightprediction)
-
 
     finally:
         commsList[ARDUINO].disconnect()
