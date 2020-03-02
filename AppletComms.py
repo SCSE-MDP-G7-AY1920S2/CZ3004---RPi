@@ -23,11 +23,9 @@ class AppletComm(object):
                 print ('[APPLET_INFO] Waiting for socket connection from Applet on {0}, port {1}'.format(self.ipAddress, self.portNum))
                 self.connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                 #self.connection.setblocking(0)
-                # self.connection.setsockopt(socket.SOL_SOCKET, socket.TCP_NODELAY, 1)
+                #self.connection.setsockopt(socket.SOL_SOCKET, socket.TCP_NODELAY, 1)
                 self.connection.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-                print("[APPLET INFO] Socket reused. Trying to bind...")
                 self.connection.bind((self.ipAddress, self.portNum))
-                print("[APPLET INFO] Socket binded.")
                 self.connection.listen(1)
                 #self.connection.setblocking(0)
                 (self.client, self.clientAddr) = self.connection.accept() #Client is the socket to transmit
