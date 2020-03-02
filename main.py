@@ -9,10 +9,11 @@ import json
 import sys
 from datetime import datetime
 import argparse
-#import cv2
-#from picamera import PiCamera
-#from ImageRec import IMAGEREC
-#from picamera.array import PiRGBArray
+import cv2
+import glob
+from picamera import PiCamera
+from ImageRec import IMAGEREC
+from picamera.array import PiRGBArray
 
 # (Thanks Kaishuo!) Setup to handle cases where serial port jumps to ACM1
 # Run this command via SSH: $ sudo python3 main.py --port /dev/ttyACM0 (or ttyACM1 - check with ls /dev/ttyACM*)
@@ -43,6 +44,9 @@ if __name__ == '__main__':
     #camera.resolution = (390, 240)
     #rawCapture = PiRGBArray(camera, size=(390,240))
     #imageRec = IMAGEREC()
+
+    #for f_name in glob.glob('/home/pi/RPi_v2/correct_images/*.jpg'): # When we run IR, clear previous images in that directory (once)
+    #    f_name.unlink()
 
     ## Set up message logs
     run_timestamp = datetime.now().isoformat()
@@ -184,6 +188,10 @@ if __name__ == '__main__':
                 elif com == 'RST':
                     exploring = False
 
+                ## Android sending T for PC to introduce fallback to starting point
+                elif com == 'T':
+                    commsList[APPLET].write('{"com":"statusUpdate", "status":"T"}')
+
                 ## G, H: EX -> FP transition (from Applet)
                 elif com == 'G':
                     exploring = False
@@ -251,7 +259,7 @@ if __name__ == '__main__':
 
                 ## Android request for raw images, send them an array of JSON strings
                 ## Update: Change to Applet (WiFi) - Bluetooth will have packet loss since they can receive in max 1KB packets
-                elif msg['com'] == 'imgRaw':
+                elif msg['com'] == 'M':
 
                     correctImages = SendRawImages(correctImages)
                     data = {'com': 'Raw Image String', 'imgRaw': correctImages}

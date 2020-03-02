@@ -3,13 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="5691b7b5-e933-4172-854d-1260da2b6920" name="Default Changelist" comment="Modification to imgRaw function (to modify here in standalone file before implementing in actual function)">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ImageRec.py" beforeDir="false" afterPath="$PROJECT_DIR$/ImageRec.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/correct_images/BLOOMIZ I AM.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/correct_images/BLOOMIZ I WAS.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/correct_images/BLOOMIZ I WILL.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/correct_images/IZONE MORE mag 1.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/correct_images/IZONE MORE mag 2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AppletComms.py" beforeDir="false" afterPath="$PROJECT_DIR$/AppletComms.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/logs/rpilog2020-02-11 02%3A32%3A40.610732.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -108,7 +104,11 @@
       <workItem from="1582247179966" duration="1783000" />
       <workItem from="1582507600499" duration="389000" />
       <workItem from="1582694531459" duration="1019000" />
-      <workItem from="1582780122108" duration="3333000" />
+      <workItem from="1582780122108" duration="3835000" />
+      <workItem from="1582852309614" duration="2503000" />
+      <workItem from="1583113895700" duration="3257000" />
+      <workItem from="1583129873159" duration="1357000" />
+      <workItem from="1583154084162" duration="718000" />
     </task>
     <task id="LOCAL-00001" summary="Modification to imgRaw function (to modify here in standalone file before implementing in actual function)">
       <created>1582178957038</created>
@@ -131,7 +131,21 @@
       <option name="project" value="LOCAL" />
       <updated>1582782211791</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Modification to imageRec (naming to xmin and ymin)">
+      <created>1582793345854</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1582793345854</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Deleting a few images">
+      <created>1582793530298</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1582793530298</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -154,7 +168,9 @@
     <MESSAGE value="Modification to imgRaw function (to modify here in standalone file before implementing in actual function)" />
     <MESSAGE value="Tweaked try-finally block in main" />
     <MESSAGE value="New ImageRec function" />
-    <option name="LAST_COMMIT_MESSAGE" value="New ImageRec function" />
+    <MESSAGE value="Modification to imageRec (naming to xmin and ymin)" />
+    <MESSAGE value="Deleting a few images" />
+    <option name="LAST_COMMIT_MESSAGE" value="Deleting a few images" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/RPi_v2$imgRaw.coverage" NAME="imgRaw Coverage Results" MODIFIED="1581755908212" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
