@@ -2,21 +2,17 @@ from multiprocessing import Process, Queue
 from ArduinoComms import ArduinoComm
 from AndroidComms import AndroidComm
 from AppletComms import AppletComm
-from ImgRaw import SendRawImages
 import numpy as np
 import os
 import json
 import sys
+import signal
 from datetime import datetime
 import argparse
-import cv2
-import glob
-from picamera import PiCamera
-from ImageRec import IMAGEREC
-from picamera.array import PiRGBArray
+import time
 
 # (Thanks Kaishuo!) Setup to handle cases where serial port jumps to ACM1
-# Run this command via SSH: $ sudo python3 main.py --port /dev/ttyACM0 (or ttyACM1 - check with ls /dev/ttyACM*)
+# Run this command via SSH: $ sudo python3 main_IR.py --port /dev/ttyACM0 (or ttyACM1 - check with ls /dev/ttyACM*)
 parser = argparse.ArgumentParser(description='MDP RPi Module')
 parser.add_argument('--port', type=str, default='/dev/ttyACM0', help='Arduino Serial port')
 args = parser.parse_args()
@@ -35,18 +31,22 @@ def listen(msgQueue, com):
         msg = com.read()
         msgQueue.put(msg)
 
+# def sigterm_intercept(camera, sig, frame):
+#     print("Launching Graceful Shutdown")
+#     if camera is not None:
+#         print("Closing Camera")
+#         camera.close()
+#         print("Camera Closed")
+#     print("Gracefully shutting down app")
+#     sys.exit(0)
+
 if __name__ == '__main__':
-    ## Initialisation - RPi camera
-    #print('[RPI_INFO] Initializing Camera.')
-    #camera = PiCamera()
-    #camera.brightness = 55
-    #camera.led = True
-    #camera.resolution = (390, 240)
-    #rawCapture = PiRGBArray(camera, size=(390,240))
-    #imageRec = IMAGEREC()
 
     #for f_name in glob.glob('/home/pi/RPi_v2/correct_images/*.jpg'): # When we run IR, clear previous images in that directory (once)
-    #    f_name.unlink()
+    #   try:
+    #       f_name.unlink()
+    #   except OSError as e:
+    #       print("Error: %s: %s" % (f_name, e.strerror))
 
     ## Set up message logs
     run_timestamp = datetime.now().isoformat()
@@ -73,6 +73,64 @@ if __name__ == '__main__':
     androidListener.start()
     appletListener.start()
 
+    # # Initialisation - RPi camera
+    cameraListener = None
+    if (commsList[ANDROID].isConnected() and commsList[APPLET].isConnected()):
+
+        print("TEST- RUN 1")
+        import cv2
+        import glob
+        from picamera import PiCamera
+        from ImageRec import IMAGEREC
+        from picamera.array import PiRGBArray
+        from ImgRaw import SendRawImages
+        import image_camera
+
+        print("Some camera functions")
+
+        def initCamera(camera):
+            camera = PiCamera()
+            camera.brightness = 55
+            camera.led = True
+            camera.resolution = (390, 240)
+
+        def capture():
+            camera = PiCamera()
+            camera.resolution = (390, 240)
+            camera.framerate = 32
+            rawCapture = PiRGBArray(camera, size=(390, 240))
+
+            time.sleep(0.1)
+
+            camera.capture(rawCapture, format="bgr")
+            image = rawCapture.array
+            filename = 'image0000.jpg'
+
+            cv2.imwrite(filename, image)
+            print("Saved " + filename)
+
+        print("TEST- RUN 2")
+
+        print('[RPI_INFO] Initializing Camera.')
+        camera = None
+        rawCapture = None
+        imageRec = IMAGEREC()
+        cameraListener = Process(target=initCamera(camera))
+        # cameraListener = Process(target=capture()) #Try to see if capturing can close properly
+
+        cameraListener.start()
+
+    # Catch SIGINT
+    def sigterm_intercept(sig, frame):
+        print("Launching Graceful Shutdown")
+        if camera is not None:
+            print("Closing Camera")
+            camera.close()
+            print("Camera Closed")
+        print("Gracefully shutting down app")
+        sys.exit(0)
+    signal.signal(signal.SIGINT, sigterm_intercept)
+
     ## Initialise variables
     running = True
     exploring = False
@@ -94,15 +152,14 @@ if __name__ == '__main__':
             except Exception as e:
                 print('[LOGFILE_ERROR] Logfile Write Error: %s' % str(e))
 
-            msgSplit = message.split(';') # Try without semi-colon
-            # for i, value in enumerate(message):
+            msgSplit = message.split(';')
             for i, value in enumerate(msgSplit):
                 #Skip the first empty string
                 if i == 0:
                     continue
                 msg = json.loads(value)
                 com = msg['com']
-                #print("received", com)
+
                 ## W, A, D: From Android or Applet
                 if com == 'W':
                     #Move forward
@@ -162,8 +219,8 @@ if __name__ == '__main__':
                     data = {'com':'startingPoint', 'startingPoint':sp}
                     commsList[APPLET].write(json.dumps(data))
 
+                ## Request sensor data from Arduino
                 elif com == 'K':
-                    #Force get sensor data from arduino
                     commsList[ARDUINO].write('K')
 
                 ## R, F, C: all calibration - from Applet or Arduino
@@ -188,7 +245,7 @@ if __name__ == '__main__':
                 elif com == 'RST':
                     exploring = False
 
-                ## Android sending T for PC to introduce fallback to starting point
+                ## (KIV) Android sending T for PC to introduce fallback to starting point
                 elif com == 'T':
                     commsList[APPLET].write('{"com":"statusUpdate", "status":"T"}')
 
@@ -243,7 +300,7 @@ if __name__ == '__main__':
 
                 ## MDF: From Applet to Android
                 elif com == 'MDF':
-                    #Received MDF from applet, relay it to androiod
+                    #Received MDF from applet, relay it to android
                     expHex = msg['expMDF']
                     obsHex = msg['objMDF'] # obj and obs used interchangeably wah toh
                     robotPos = msg['pos']
@@ -260,7 +317,6 @@ if __name__ == '__main__':
                 ## Android request for raw images, send them an array of JSON strings
                 ## Update: Change to Applet (WiFi) - Bluetooth will have packet loss since they can receive in max 1KB packets
                 elif msg['com'] == 'M':
-
                     correctImages = SendRawImages(correctImages)
                     data = {'com': 'Raw Image String', 'imgRaw': correctImages}
                     commsList[APPLET].write(json.dumps(data))
@@ -273,36 +329,52 @@ if __name__ == '__main__':
                     commsList[ANDROID].write(';{"com": "statusUpdate", "status": "Running Image Recognition"}')
                     commsList[APPLET].write('{"com": "statusUpdate", "status": "Running Image Recognition"}')
 
-                # elif msg['com'] == 'I':
-                #      rawCapture = PiRGBArray(camera, size=(390,240))
-                #      camera.capture(rawCapture, format="bgr")
-                #      image = rawCapture.array
-                #      img1 = image[120:, 0:130, :]
-                #      img2 = image[120:, 130:260, :]
-                #      img3 = image[120:, 260:390, :]
-                #      rect1, leftprediction = imageRec.predict(img1)
-                #      rect2, midprediction = imageRec.predict(img2)
-                #      rect3, rightprediction = imageRec.predict(img3)
-                #
-                #     rects = []
-                #     rects.append(rect1)
-                #     rects.append(rect2)
-                #     rects.append(rect3)
-                #
-                ##     for i, rect in enumerate(rects):
-                ##        if rect != None:
-                ##           image = cv2.rectangle(image, (i * 120 + rect[0], 120 + rect[1]), (i * 120 + rect[2], 120 + rect[3]), (0,255,0), 2)
-                ##     cv2.imwrite(str(index) + '.jpg', image)
-                ##     index = index + 1
-                #     data = {'com':'Image Taken', 'left': leftprediction,'middle': midprediction, 'right':rightprediction}
-                #     commsList[APPLET].write(json.dumps(data))
-                #     print('Left Prediction: ', leftprediction)
-                #     print('Middle Prediction: ', midprediction)
-                #     print('Right Prediction: ', rightprediction)
+                elif msg['com'] == 'I':
+                    rawCapture = PiRGBArray(camera, size=(390,240))
+                    camera.capture(rawCapture, format="bgr")
+                    image = rawCapture.array
+                    img1 = image[120:, 0:130, :]
+                    img2 = image[120:, 130:260, :]
+                    img3 = image[120:, 260:390, :]
+                    rect1, leftprediction = imageRec.predict(img1)
+                    rect2, midprediction = imageRec.predict(img2)
+                    rect3, rightprediction = imageRec.predict(img3)
+
+                    rects = []
+                    rects.append(rect1)
+                    rects.append(rect2)
+                    rects.append(rect3)
+
+                #     for i, rect in enumerate(rects):
+                #        if rect != None:
+                #           image = cv2.rectangle(image, (i * 120 + rect[0], 120 + rect[1]), (i * 120 + rect[2], 120 + rect[3]), (0,255,0), 2)
+                #     cv2.imwrite(str(index) + '.jpg', image)
+                #     index = index + 1
+                    data = {'com':'Image Taken', 'left': leftprediction,'middle': midprediction, 'right':rightprediction}
+                    commsList[APPLET].write(json.dumps(data))
+                    print('Left Prediction: ', leftprediction)
+                    print('Middle Prediction: ', midprediction)
+                    print('Right Prediction: ', rightprediction)
 
     finally:
         commsList[ARDUINO].disconnect()
         commsList[ANDROID].disconnect()
         commsList[APPLET].disconnect()
+
+        print("********CLOSING CAMERA*********")
+        if cameraListener is not None:
+            cameraListener.terminate()
+        camera.close()
+        print("********CLOSED CAMERA*********")
+
+        print("********JOINING PROCESSES*********")
+        arduinoListener.join()
+        androidListener.join()
+        appletListener.join()
+        if cameraListener is not None:
+            cameraListener.join()
+            print("***Returned camera process***")
+        print("********JOINED PROCESSES*********")
+
         logfile.close()
         sys.exit(0)
