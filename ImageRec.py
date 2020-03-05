@@ -16,10 +16,14 @@ class IMAGEREC():
             ["yolo-coco", "yolov3-tiny_obj_last.weights"])
         configPath = os.path.sep.join(["yolo-coco", "yolov3-tiny_obj.cfg"])
         print("[INFO] loading YOLO from disk...")
+        print("[INFO] Loading Weights", weightsPath)
+        print("[INFO] Loading Config", configPath)
         self.net = cv2.dnn.readNetFromDarknet(configPath, weightsPath)
+        print("[INFO] IMAGEREC Initialization Complete!")
 
     def predict(self, image):
         # image = cv2.imread(img)
+        print("[IMG] PREDICT")
         (H, W) = image.shape[:2]
 
         # determine only the *output* layer names that we need from YOLO
@@ -28,11 +32,15 @@ class IMAGEREC():
         # construct a blob from the input image and then perform a forward
         # pass of the YOLO object detector, giving us our bounding boxes and
         # associated probabilities
+        print("[IMG] READ")
         blob = cv2.dnn.blobFromImage(image, 1 / 255.0, (416, 416),
                                      swapRB=True, crop=False)
+        print("[IMG] READ TO NET")
         self.net.setInput(blob)
         start = time.time()
+        print("[IMG] CHECK")
         layerOutputs = self.net.forward(ln)
+        print("[IMG] CLEAR")
         end = time.time()
 
         # show timing information on YOLO
@@ -43,6 +51,8 @@ class IMAGEREC():
         boxes = []
         confidences = []
         classIDs = []
+
+        print("Variables initialised")
 
         # loop over each of the layer outputs
         for output in layerOutputs:
@@ -77,10 +87,13 @@ class IMAGEREC():
         idxs = cv2.dnn.NMSBoxes(boxes, confidences, 0.5,
                                 0.3)
 
+        print("Detecting...")
+
         # ensure at least one detection exists
-        area, chosen_class, index = 0, -1, -1
+        area, chosen_class, index = 0, 0, -1
         area_threshold = 4000
         if len(idxs) > 0:
+            print("Detection found")
             # loop over the indexes we are keeping
             for i in idxs.flatten():
                 # extract the bounding box coordinates
@@ -117,6 +130,12 @@ class IMAGEREC():
             # show the output image
             # cv2.imshow("Image", image)
             # cv2.waitKey(0)
-            cv2.imwrite("correct_images/" + chosen_class + ".jpg", image)
+            owd = os.getcwd()
+            os.chdir("/home/pi/RPi_v2/correct_images/")
+            cv2.imwrite(chosen_class + ".jpg", image)
+            os.chdir(owd)
             # return chosen_class, x, y, w, h, area
+            print(bounding_box, chosen_class)
             return bounding_box, chosen_class
+        else:
+            return None, chosen_class
