@@ -1,6 +1,7 @@
 #Refer to Python Documentation for 'socket' info
 
 import time
+import socket
 from bluetooth import *
 
 class AndroidComm(object):
@@ -21,14 +22,14 @@ class AndroidComm(object):
             BTChannel = 3 #The Bluetooth Channel According to Pi
             retry = False
             try:
-                self.serverSock = BluetoothSocket(3)
+                #self.serverSock = BluetoothSocket(3)
+                self.serverSock = BluetoothSocket(RFCOMM)
                 self.serverSock.bind(('', BTChannel)) #Can try bluetooth.PORT_ANY or BTChannel also
                 self.serverSock.listen(1) #Specify how many clients the thing will wait for
                 self.port = self.serverSock.getsockname()[1] #Value returned is [host, port]. We need port
 
-                uuid = '00001101-0000-1000-8000-00805F9B34FB' #I don't know why it's using this
-                #uuid = '7121A3C0-2CDE-4BED-8253-E3F6C8BCBCAF' #From Android
-                #uuid = '94f39d29-7d6d-437d-973b-fba39e49d4ee' #From Leon's Android
+                uuid = '00001101-0000-1000-8000-00805F9B34FB' #Default (using this now)
+                #uuid = '7121A3C0-2CDE-4BED-8253-E3F6C8BCBCAF' #What we generated (not in use)
 
                 #Advertise service referenced from PyBluez Documentation
                 advertise_service(self.serverSock, 'MDP-07',
@@ -64,14 +65,14 @@ class AndroidComm(object):
             #If there is an existing server socket
             if not (self.serverSock is None):
                 print('[BLUETOOTH_CLOSE] Shutting down BT Server')
-                self.serverSock.shutdown() #Needed to shutdown in a timely fashion
+                self.serverSock.shutdown(socket.SHUT_RDWR) #Needed to shutdown in a timely fashion
                 self.serverSock.close()
                 print('[BLUETOOTH_CLOSE] BT Server Shut Down Successfully')
 
             #If there is an existing client socket
             if not (self.clientSock is None):
                 print('[BLUETOOTH_CLOSE] Shutting down BT Client')
-                self.clientSock.shutdown() #Needed to shutdown in a timely fashion
+                self.clientSock.shutdown(socket.SHUT_RDWR) #Needed to shutdown in a timely fashion
                 self.clientSock.close()
                 print('[BLUETOOTH_CLOSE] BT Client Shut Down Successfully')
 
