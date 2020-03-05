@@ -2,10 +2,18 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5691b7b5-e933-4172-854d-1260da2b6920" name="Default Changelist" comment="Modification to imgRaw function (to modify here in standalone file before implementing in actual function)">
+      <change beforePath="$PROJECT_DIR$/.idea/MDP RPi - New.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/MDP RPi - New.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppletComms.py" beforeDir="false" afterPath="$PROJECT_DIR$/AppletComms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AndroidComms.py" beforeDir="false" afterPath="$PROJECT_DIR$/AndroidComms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ImageRec.py" beforeDir="false" afterPath="$PROJECT_DIR$/ImageRec.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ImageRec_imgonly.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/extract_imgonly.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/image_camera.py" beforeDir="false" afterPath="$PROJECT_DIR$/image_camera.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/logs/rpilog2020-02-11 02%3A32%3A40.610732.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main_IR.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_IR.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main_imgonly.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/main_noIR.py" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -37,6 +45,11 @@
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
   </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Personal materials\NTU materials\Year 3\CZ3004 - FAKKYU (MDP)\RPi_v2" />
+    </key>
+  </component>
   <component name="RunDashboard">
     <option name="ruleStates">
       <list>
@@ -49,7 +62,29 @@
       </list>
     </option>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Python.directory">
+    <configuration name="directory" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="MDP RPi - New" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/directory.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="imgRaw" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="MDP RPi - New" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -74,6 +109,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.directory" />
         <item itemvalue="Python.imgRaw" />
       </list>
     </recent_temporary>
@@ -108,7 +144,20 @@
       <workItem from="1582852309614" duration="2503000" />
       <workItem from="1583113895700" duration="3257000" />
       <workItem from="1583129873159" duration="1357000" />
-      <workItem from="1583154084162" duration="718000" />
+      <workItem from="1583154084162" duration="1118000" />
+      <workItem from="1583200921909" duration="794000" />
+      <workItem from="1583216031657" duration="12729000" />
+      <workItem from="1583251920447" duration="6894000" />
+      <workItem from="1583285857772" duration="10280000" />
+      <workItem from="1583300520377" duration="7339000" />
+      <workItem from="1583325717020" duration="1135000" />
+      <workItem from="1583330968591" duration="1200000" />
+      <workItem from="1583390278389" duration="4502000" />
+      <workItem from="1583398981690" duration="2336000" />
+      <workItem from="1583401378536" duration="75000" />
+      <workItem from="1583401504853" duration="918000" />
+      <workItem from="1583402564213" duration="1899000" />
+      <workItem from="1583408939723" duration="270000" />
     </task>
     <task id="LOCAL-00001" summary="Modification to imgRaw function (to modify here in standalone file before implementing in actual function)">
       <created>1582178957038</created>
@@ -145,7 +194,35 @@
       <option name="project" value="LOCAL" />
       <updated>1582793530298</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="1. Command to send raw images - M&#10;2. Added initial step to clear images in folder - if we are running IR">
+      <created>1583156482979</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1583156482979</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Removed debugging print statements">
+      <created>1583156522283</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1583156522284</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Renamed main to main_IR - where we try to get PiCamera and IR working">
+      <created>1583258657232</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1583258657232</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Fallback main code - used when only running ex and fp">
+      <created>1583258691783</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1583258691783</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -170,9 +247,14 @@
     <MESSAGE value="New ImageRec function" />
     <MESSAGE value="Modification to imageRec (naming to xmin and ymin)" />
     <MESSAGE value="Deleting a few images" />
-    <option name="LAST_COMMIT_MESSAGE" value="Deleting a few images" />
+    <MESSAGE value="1. Command to send raw images - M&#10;2. Added initial step to clear images in folder - if we are running IR" />
+    <MESSAGE value="Removed debugging print statements" />
+    <MESSAGE value="Renamed main to main_IR - where we try to get PiCamera and IR working" />
+    <MESSAGE value="Fallback main code - used when only running ex and fp" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fallback main code - used when only running ex and fp" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/RPi_v2$directory.coverage" NAME="directory Coverage Results" MODIFIED="1583259813993" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/RPi_v2$imgRaw.coverage" NAME="imgRaw Coverage Results" MODIFIED="1581755908212" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

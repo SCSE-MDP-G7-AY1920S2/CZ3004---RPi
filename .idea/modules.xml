@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/MDP RPi - New.iml" filepath="$PROJECT_DIR$/.idea/MDP RPi - New.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../Senpai Gerald's Work/RPi/.idea/RPi.iml" filepath="$PROJECT_DIR$/../Senpai Gerald's Work/RPi/.idea/RPi.iml" />
     </modules>
   </component>
 </project>
