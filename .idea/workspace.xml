@@ -2,18 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5691b7b5-e933-4172-854d-1260da2b6920" name="Default Changelist" comment="Modification to imgRaw function (to modify here in standalone file before implementing in actual function)">
-      <change beforePath="$PROJECT_DIR$/.idea/MDP RPi - New.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/MDP RPi - New.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/main_IR.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AndroidComms.py" beforeDir="false" afterPath="$PROJECT_DIR$/AndroidComms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.weq.swp" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/ImageRec.py" beforeDir="false" afterPath="$PROJECT_DIR$/ImageRec.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ImageRec_imgonly.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/extract_imgonly.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/image_camera.py" beforeDir="false" afterPath="$PROJECT_DIR$/image_camera.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ImageRec_WJ.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/extract.py" beforeDir="false" afterPath="$PROJECT_DIR$/extract.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/logs/rpilog2020-02-11 02%3A32%3A40.610732.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/main_IR.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_IR.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main_imgonly.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/main_noIR.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_EX.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -157,7 +153,15 @@
       <workItem from="1583401378536" duration="75000" />
       <workItem from="1583401504853" duration="918000" />
       <workItem from="1583402564213" duration="1899000" />
-      <workItem from="1583408939723" duration="270000" />
+      <workItem from="1583408939723" duration="795000" />
+      <workItem from="1583410151097" duration="77000" />
+      <workItem from="1583423879727" duration="83000" />
+      <workItem from="1583423985112" duration="8000" />
+      <workItem from="1583423994678" duration="63000" />
+      <workItem from="1583424081985" duration="598000" />
+      <workItem from="1583458050351" duration="6741000" />
+      <workItem from="1583473763199" duration="4643000" />
+      <workItem from="1583496441804" duration="715000" />
     </task>
     <task id="LOCAL-00001" summary="Modification to imgRaw function (to modify here in standalone file before implementing in actual function)">
       <created>1582178957038</created>
@@ -222,7 +226,49 @@
       <option name="project" value="LOCAL" />
       <updated>1583258691783</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary=".">
+      <created>1583409356577</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1583409356577</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Deleted files">
+      <created>1583409387474</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1583409387474</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Update to Audrey's ImageRec file - added debugging print statements">
+      <created>1583409434350</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1583409434350</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Called BluetoothSocket(RFCOMM) instead of BluetoothSocket(3)">
+      <created>1583409545332</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1583409545332</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Added Wei Jian's ImageRec file - to try running this as originally intended">
+      <created>1583409579994</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1583409579994</updated>
+    </task>
+    <task id="LOCAL-00015" summary="Removed all the testing main files - settling this as the main file to run">
+      <created>1583409665605</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1583409665605</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -251,7 +297,13 @@
     <MESSAGE value="Removed debugging print statements" />
     <MESSAGE value="Renamed main to main_IR - where we try to get PiCamera and IR working" />
     <MESSAGE value="Fallback main code - used when only running ex and fp" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fallback main code - used when only running ex and fp" />
+    <MESSAGE value="." />
+    <MESSAGE value="Deleted files" />
+    <MESSAGE value="Update to Audrey's ImageRec file - added debugging print statements" />
+    <MESSAGE value="Called BluetoothSocket(RFCOMM) instead of BluetoothSocket(3)" />
+    <MESSAGE value="Added Wei Jian's ImageRec file - to try running this as originally intended" />
+    <MESSAGE value="Removed all the testing main files - settling this as the main file to run" />
+    <option name="LAST_COMMIT_MESSAGE" value="Removed all the testing main files - settling this as the main file to run" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/RPi_v2$directory.coverage" NAME="directory Coverage Results" MODIFIED="1583259813993" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
