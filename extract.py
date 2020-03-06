@@ -7,7 +7,7 @@ def extractBoundingBox(img):
     gray = cv2.GaussianBlur(gray, (5,5), 0)
     
     thresh0 = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 51, 1)
-    _, contours,_ = cv2.findContours(thresh0, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+    contours,_ = cv2.findContours(thresh0, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
      
     #Find bounding box of contours
     bbs = []
