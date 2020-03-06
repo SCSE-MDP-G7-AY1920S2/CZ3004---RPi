@@ -1,19 +1,22 @@
 from multiprocessing import Process, Queue
+from time import sleep
+
 from ArduinoComms import ArduinoComm
 from AndroidComms import AndroidComm
 from AppletComms import AppletComm
 from ImgRaw import SendRawImages
+
 import numpy as np
 import os
 import json
 import sys
+import signal
 from datetime import datetime
 import argparse
-from ImageRec_WJ import IMAGEREC
+
+from ImageRec import IMAGEREC
 import cv2
-import glob
 from picamera import PiCamera
-#from ImageRec import IMAGEREC
 from picamera.array import PiRGBArray
 
 # (Thanks Kaishuo!) Setup to handle cases where serial port jumps to ACM1
@@ -42,11 +45,24 @@ if __name__ == '__main__':
     ## Initialisation - RPi camera - a bloody mess
     print('[RPI_INFO] Initializing Camera.')
     camera = PiCamera()
-    ##camera.brightness = 55
-    ##camera.led = True
-    camera.resolution = (390, 240)
-    rawCapture = PiRGBArray(camera, size=(390,240))
+    camera.resolution = (416, 240)
+    camera.framerate = 30
+    camera.start_preview()
+    print('[RPI_INFO] Warming up camera...')
+    sleep(2)
+    print('[RPI_INFO] Camera warmed up and ready')
     imageRec = IMAGEREC()
+
+    ## Gracefully shut down camera - in case we need it
+    # def sigterm_intercept(sig, frame):
+    #     print("Launching Graceful Shutdown")
+    #     print("Gracefully shutting down app")
+    #     if camera is not None:
+    #         print("Closing Camera")
+    #         camera.close()
+    #         print("Camera Closed")
+    #     sys.exit(0)
+    # signal.signal(signal.SIGINT, sigterm_intercept)
 
     ## Set up message logs
     run_timestamp = datetime.now().isoformat()
@@ -74,12 +90,12 @@ if __name__ == '__main__':
     appletListener.start()
 
     # Clear previous images
-    correctdir = "/home/pi/RPi_v2/correct_images/"
-    test = os.listdir(correctdir)
+    imagedir = "/home/pi/RPi_v2/correct_images/"
+    test = os.listdir(imagedir)
 
     for f in test:
         if f.endswith(".jpg"):
-            os.remove(os.path.join(correctdir, f))
+            os.remove(os.path.join(imagedir, f))
 
     ## Initialise variables
     running = True
@@ -87,8 +103,9 @@ if __name__ == '__main__':
     obsHex = ''
     expHex = ''
     imgs = ''
-    index = 0  # Used in IR
-    correctImages = []
+    # index = 0
+    correctImages = [] # Array to send raw image data
+    correctIdx = []
 
     try:
         while running:
@@ -103,14 +120,14 @@ if __name__ == '__main__':
                 print('[LOGFILE_ERROR] Logfile Write Error: %s' % str(e))
 
             msgSplit = message.split(';')  # Try without semi-colon
-            # for i, value in enumerate(message):
+
             for i, value in enumerate(msgSplit):
                 # Skip the first empty string
                 if i == 0:
                     continue
                 msg = json.loads(value)
                 com = msg['com']
-                # print("received", com)
+
                 ## W, A, D: From Android or Applet
                 if com == 'W':
                     # Move forward
@@ -145,15 +162,6 @@ if __name__ == '__main__':
 
                 ## Sensor Data: From Arduino
                 elif com == 'SD':
-                    # Received Sensor Data
-                    fl = msg["fl"]
-                    fm = msg["fm"]
-                    fr = msg["fr"]
-                    rf = msg["rf"]
-                    rb = msg["rb"]
-                    left = msg["left"]
-                    data = {'fl': fl, 'fm': fm, 'fr': fr, 'rt': rf, 'rb': rb, 'left': left}
-                    # commsList[APPLET].write(json.dumps(data))
                     commsList[APPLET].write(json.dumps(msg))
 
                 ## Way point and Starting point: From Android
@@ -202,10 +210,6 @@ if __name__ == '__main__':
                 elif com == 'RST':
                     exploring = False
 
-                ## Android sending T for PC to introduce fallback to starting point
-                elif com == 'T':
-                    commsList[APPLET].write('{"com":"statusUpdate", "status":"T"}')
-
                 ## G, H: EX -> FP transition (from Applet)
                 elif com == 'G':
                     exploring = False
@@ -214,17 +218,8 @@ if __name__ == '__main__':
                     commsList[ANDROID].write(';{"com":"statusUpdate", "status":"Exploration Complete"}')
 
                     jsonExpHex = " Exp " + expHex
-                    # data = {'com':'statusUpdate', 'status':jsonExpHex}
-                    # commsList[ANDROID].write(json.dumps(data))
-                    # #commsList[ANDROID].write(';' + json.dumps(data))
                     jsonObsHex = ", Obj " + obsHex
-                    # data = {'com':'statusUpdate', 'status':jsonObsHex}
-                    # commsList[ANDROID].write(json.dumps(data))
-                    # #commsList[ANDROID].write(';' + json.dumps(data))
                     jsonImgs = ", Img " + str(imgs)
-                    # data = {'com':'statusUpdate', 'status':jsonImgs}
-                    # commsList[ANDROID].write(json.dumps(data))
-                    # #commsList[ANDROID].write(';' + json.dumps(data))
 
                     ## We try this - send at once
                     jsonString = jsonExpHex + jsonObsHex + jsonImgs
@@ -238,17 +233,8 @@ if __name__ == '__main__':
                     commsList[ANDROID].write(';{"com":"statusUpdate", "status":"Exploration Complete"}')
 
                     jsonExpHex = " Exp " + expHex
-                    # data = {'com':'statusUpdate', 'status':jsonExpHex}
-                    # commsList[ANDROID].write(json.dumps(data))
-                    # #commsList[ANDROID].write(';' + json.dumps(data))
                     jsonObsHex = ", Obj " + obsHex
-                    # data = {'com':'statusUpdate', 'status':jsonObsHex}
-                    # commsList[ANDROID].write(json.dumps(data))
-                    # #commsList[ANDROID].write(';' + json.dumps(data))
                     jsonImgs = ", Img " + str(imgs)
-                    # data = {'com':'statusUpdate', 'status':jsonImgs}
-                    # commsList[ANDROID].write(json.dumps(data))
-                    # #commsList[ANDROID].write(';' + json.dumps(data))
 
                     ## We try this - send at once
                     jsonString = jsonExpHex + jsonObsHex + jsonImgs
@@ -257,20 +243,6 @@ if __name__ == '__main__':
 
                 ## MDF: From Applet to Android
                 elif com == 'MDF':
-                    # Received MDF from applet, relay it to androiod
-                    expHex = msg['expMDF']
-                    obsHex = msg['objMDF']  # obj and obs used interchangeably wah toh
-                    robotPos = msg['pos']
-                    imgs = msg['imgs']
-
-                    data = {'mapState': {'com': 'GS', 'obstacles': obsHex,
-                                         'explored': expHex, 'robotPosition': robotPos, 'imgs': imgs}}
-
-                    ## If line below is not a needed visual, we can leave it out
-                    commsList[ANDROID].write(
-                        ';{"com": "statusUpdate", "status": "Moving to (' + str(robotPos[0]) + ',' + str(
-                            robotPos[1]) + ')"}')
-                    # commsList[ANDROID].write(';' + json.dumps(data))
                     commsList[ANDROID].write(json.dumps(msg))
 
                 ## Android request for raw images, send them an array of JSON strings
@@ -280,45 +252,57 @@ if __name__ == '__main__':
                     data = {'com': 'Raw Image String', 'imgRaw': correctImages}
                     commsList[APPLET].write(json.dumps(data))
 
-                elif com == 'S':
-                    # Move backward
-                    commsList[ARDUINO].write('S')
-
                 elif msg['com'] == 'IR':
                     commsList[ANDROID].write(';{"com": "statusUpdate", "status": "Running Image Recognition"}')
                     commsList[APPLET].write('{"com": "statusUpdate", "status": "Running Image Recognition"}')
 
                 elif msg['com'] == 'I':
-                    rawCapture = PiRGBArray(camera, size=(390,240))
-                    camera.capture(rawCapture, format="bgr")
+                    rawCapture = PiRGBArray(camera) #, size=camera.resolution)
+                    camera.capture(rawCapture, 'bgr')
                     image = rawCapture.array
-                    img1 = image[120:, 0:130, :]
-                    img2 = image[120:, 130:260, :]
-                    img3 = image[120:, 260:390, :]
-                    rect1, leftprediction = IMAGEREC.predict(img1)
-                    rect2, midprediction = IMAGEREC.predict(img2)
-                    rect3, rightprediction = IMAGEREC.predict(img3)
+                    img1 = image[120:, 0:139, :]
+                    img2 = image[120:, 139:277, :]
+                    img3 = image[120:, 277:416, :]
+
+                    rect1, leftprediction = imageRec.predict(img1)
+                    rect2, midprediction = imageRec.predict(img2)
+                    rect3, rightprediction = imageRec.predict(img3)
 
                     rects = []
                     rects.append(rect1)
                     rects.append(rect2)
                     rects.append(rect3)
 
+                    ids = []
+                    ids.append(leftprediction)
+                    ids.append(midprediction)
+                    ids.append(rightprediction)
+
+                    print(rects, ids)
+
                     for i, rect in enumerate(rects):
-                       if rect != None:
-                          image = cv2.rectangle(image, (i * 120 + rect[0], 120 + rect[1]), (i * 120 + rect[2], 120 + rect[3]), (0,255,0), 2)
-                    cv2.imwrite(str(index) + '.jpg', image)
-                    index = index + 1
+                        if rect is not None:
+                            image = cv2.rectangle(image, (i * 120 + rect[0], 120 + rect[1]), (i * 120 + rect[2], 120 + rect[3]), (0,255,0), 2)
+                        if ids[i] > 0: # Don't save those that default return 0
+                            if ids[i] not in correctIdx: # Following Algo - save first instance instead of overwriting
+                                cv2.imwrite(os.path.join(imagedir, str(ids[i]) + '.jpg'), image)
+                                correctIdx.append(ids[i])
+                                print("Image saved: " + str(ids[i]) + '.jpg')
+                    # index = index + 1
                     data = {'com':'Image Taken', 'left': leftprediction,'middle': midprediction, 'right':rightprediction}
                     commsList[APPLET].write(json.dumps(data))
                     print('Left Prediction: ', leftprediction)
                     print('Middle Prediction: ', midprediction)
                     print('Right Prediction: ', rightprediction)
 
+    except Exception as e:
+        print("[MAIN_ERROR] Error. Prepare to shutdown...")
+
     finally:
         commsList[ARDUINO].disconnect()
         commsList[ANDROID].disconnect()
         commsList[APPLET].disconnect()
+        camera.stop_preview()
         camera.close()
         logfile.close()
         sys.exit(0)
