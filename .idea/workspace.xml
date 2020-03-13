@@ -2,14 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5691b7b5-e933-4172-854d-1260da2b6920" name="Default Changelist" comment="Modification to imgRaw function (to modify here in standalone file before implementing in actual function)">
-      <change afterPath="$PROJECT_DIR$/main_IR.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.weq.swp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ImageRec.py" beforeDir="false" afterPath="$PROJECT_DIR$/ImageRec.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ImageRec_WJ.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/extract.py" beforeDir="false" afterPath="$PROJECT_DIR$/extract.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/rpilog2020-02-11 02%3A32%3A40.610732.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_EX.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main_EX.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_EX.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main_IR.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_IR.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -161,7 +157,11 @@
       <workItem from="1583424081985" duration="598000" />
       <workItem from="1583458050351" duration="6741000" />
       <workItem from="1583473763199" duration="4643000" />
-      <workItem from="1583496441804" duration="715000" />
+      <workItem from="1583496441804" duration="1312000" />
+      <workItem from="1583503672754" duration="2659000" />
+      <workItem from="1583664849226" duration="1799000" />
+      <workItem from="1583989799382" duration="1254000" />
+      <workItem from="1584066850765" duration="1001000" />
     </task>
     <task id="LOCAL-00001" summary="Modification to imgRaw function (to modify here in standalone file before implementing in actual function)">
       <created>1582178957038</created>
@@ -268,7 +268,49 @@
       <option name="project" value="LOCAL" />
       <updated>1583409665605</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="Consolidated ImageRec file">
+      <created>1583503070916</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1583503070916</updated>
+    </task>
+    <task id="LOCAL-00017" summary="findContours return 2 items instead of 3">
+      <created>1583503095884</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1583503095884</updated>
+    </task>
+    <task id="LOCAL-00018" summary="06/03/2020">
+      <created>1583503174099</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1583503174099</updated>
+    </task>
+    <task id="LOCAL-00019" summary="Split out 2 main files - one for exploration (removing camera and IR related functions), one for image recognition">
+      <created>1583503224020</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1583503224020</updated>
+    </task>
+    <task id="LOCAL-00020" summary="All the updates on 06/03/2020:&#10;- Split out 2 main files - one for exploration (removing camera and IR related functions), one for image recognition&#10;- Debugged camera and IR related errors&#10;- Modified function to save images (save 1st instance instead of overwriting)">
+      <created>1583503347236</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1583503347236</updated>
+    </task>
+    <task id="LOCAL-00021" summary="Removed logs from Github">
+      <created>1583503398426</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1583503398426</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -303,7 +345,13 @@
     <MESSAGE value="Called BluetoothSocket(RFCOMM) instead of BluetoothSocket(3)" />
     <MESSAGE value="Added Wei Jian's ImageRec file - to try running this as originally intended" />
     <MESSAGE value="Removed all the testing main files - settling this as the main file to run" />
-    <option name="LAST_COMMIT_MESSAGE" value="Removed all the testing main files - settling this as the main file to run" />
+    <MESSAGE value="Consolidated ImageRec file" />
+    <MESSAGE value="findContours return 2 items instead of 3" />
+    <MESSAGE value="06/03/2020" />
+    <MESSAGE value="Split out 2 main files - one for exploration (removing camera and IR related functions), one for image recognition" />
+    <MESSAGE value="All the updates on 06/03/2020:&#10;- Split out 2 main files - one for exploration (removing camera and IR related functions), one for image recognition&#10;- Debugged camera and IR related errors&#10;- Modified function to save images (save 1st instance instead of overwriting)" />
+    <MESSAGE value="Removed logs from Github" />
+    <option name="LAST_COMMIT_MESSAGE" value="Removed logs from Github" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/RPi_v2$directory.coverage" NAME="directory Coverage Results" MODIFIED="1583259813993" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />

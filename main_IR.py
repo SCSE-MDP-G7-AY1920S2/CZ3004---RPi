@@ -20,7 +20,7 @@ from picamera import PiCamera
 from picamera.array import PiRGBArray
 
 # (Thanks Kaishuo!) Setup to handle cases where serial port jumps to ACM1
-# Run this command via SSH: $ sudo python3 main_noIR.py --port /dev/ttyACM0 (or ttyACM1 - check with ls /dev/ttyACM*)
+# Run this command via SSH: $ sudo python3 main_IR.py --port /dev/ttyACM0 (or ttyACM1 - check with ls /dev/ttyACM*)
 parser = argparse.ArgumentParser(description='MDP RPi Module')
 parser.add_argument('--port', type=str, default='/dev/ttyACM0', help='Arduino Serial port')
 args = parser.parse_args()
@@ -183,17 +183,14 @@ if __name__ == '__main__':
                     commsList[ARDUINO].write('K')
 
                 ## R, F, C: all calibration - from Applet or Arduino
-                elif com == 'R':
-                    if msg['from'] == 'Applet':
-                        commsList[ARDUINO].write('R')
-                    elif msg['from'] == 'Arduino':
-                        commsList[APPLET].write('{"com":"statusUpdate", "status":"Finish Calibrate"}')
+                elif com == 'R': # R got right, F for front
+                    commsList[ARDUINO].write('R')
 
-                elif com == 'F':
-                    if msg['from'] == 'Applet':
-                        commsList[ARDUINO].write('F')
-                    elif msg['from'] == 'Arduino':
-                        commsList[APPLET].write('{"com":"statusUpdate", "status":"Finish Calibrate"}')
+                elif com == 'F': #nobangwallszxc
+                    commsList[ARDUINO].write('F')
+
+                elif com == 'f': #nobangblockszxc
+                    commsList[ARDUINO].write('f')
 
                 elif com == 'C':
                     if msg['from'] == 'Applet':
@@ -202,10 +199,7 @@ if __name__ == '__main__':
                         commsList[APPLET].write('{"com":"statusUpdate", "status":"Finish Calibrate"}')
 
                 elif com == 'Q':
-                    if msg['from'] == 'Applet':
-                        commsList[ARDUINO].write('Q')
-                    elif msg['from'] == 'Arduino':
-                        commsList[APPLET].write('{"com":"statusUpdate", "status":"Finish Calibrate (Right-facing)"}')
+                    commsList[ARDUINO].write('Q')
 
                 elif com == 'RST':
                     exploring = False
