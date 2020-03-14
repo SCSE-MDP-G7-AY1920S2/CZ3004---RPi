@@ -9,6 +9,7 @@ import numpy as np
 import os
 import json
 import sys
+from copy import deepcopy
 from datetime import datetime
 import argparse
 
@@ -134,6 +135,12 @@ if __name__ == '__main__':
                     # data = {'fl': fl, 'fm': fm, 'fr': fr, 'rt': rf, 'rb': rb, 'left': left}
                     # commsList[APPLET].write(json.dumps(data))
                     commsList[APPLET].write(json.dumps(msg))
+
+                ## Sensor Data: From Arduino, after each move.
+                elif com == 'MF':
+                    data = deepcopy(msg)
+                    data['status'] = "Finish Move"
+                    commsList[APPLET].write(json.dumps(data))
 
                 ## Way point and Starting point: From Android
                 ## Check if WM might want to send without formatting data

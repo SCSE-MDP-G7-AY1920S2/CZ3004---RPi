@@ -12,6 +12,7 @@ import json
 import sys
 import signal
 from datetime import datetime
+from copy import deepcopy
 import argparse
 
 from ImageRec import IMAGEREC
@@ -163,6 +164,12 @@ if __name__ == '__main__':
                 ## Sensor Data: From Arduino
                 elif com == 'SD':
                     commsList[APPLET].write(json.dumps(msg))
+
+                ## Sensor Data: From Arduino, after each move.
+                elif com == 'MF':
+                    data = deepcopy(msg)
+                    data['status'] = "Finish Move"
+                    commsList[APPLET].write(json.dumps(data))
 
                 ## Way point and Starting point: From Android
                 ## Check if WM might want to send without formatting data
