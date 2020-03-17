@@ -12,8 +12,8 @@ import json
 import sys
 import signal
 from datetime import datetime
-from copy import deepcopy
 import argparse
+from copy import deepcopy
 
 from ImageRec import IMAGEREC
 import cv2
@@ -23,9 +23,11 @@ from picamera.array import PiRGBArray
 # (Thanks Kaishuo!) Setup to handle cases where serial port jumps to ACM1
 # Run this command via SSH: $ sudo python3 main_IR.py --port /dev/ttyACM0 (or ttyACM1 - check with ls /dev/ttyACM*)
 parser = argparse.ArgumentParser(description='MDP RPi Module')
-parser.add_argument('--port', type=str, default='/dev/ttyACM0', help='Arduino Serial port')
+parser.add_argument('--port', type=str,
+                    default='/dev/ttyACM0', help='Arduino Serial port')
 args = parser.parse_args()
 arduino_port = args.port
+
 
 def connect(commsList):
     for comms in commsList:
@@ -42,8 +44,9 @@ def listen(msgQueue, com):
         msg = com.read()
         msgQueue.put(msg)
 
+
 if __name__ == '__main__':
-    ## Initialisation - RPi camera - a bloody mess
+    # Initialisation - RPi camera - a bloody mess
     print('[RPI_INFO] Initializing Camera.')
     camera = PiCamera()
     camera.resolution = (416, 240)
@@ -54,7 +57,7 @@ if __name__ == '__main__':
     print('[RPI_INFO] Camera warmed up and ready')
     imageRec = IMAGEREC()
 
-    ## Gracefully shut down camera - in case we need it
+    # Gracefully shut down camera - in case we need it
     # def sigterm_intercept(sig, frame):
     #     print("Launching Graceful Shutdown")
     #     print("Gracefully shutting down app")
@@ -65,12 +68,13 @@ if __name__ == '__main__':
     #     sys.exit(0)
     # signal.signal(signal.SIGINT, sigterm_intercept)
 
-    ## Set up message logs
+    # Set up message logs
     run_timestamp = datetime.now().isoformat()
     os.makedirs('logs', exist_ok=True)
-    logfile = open(os.path.join('logs', 'rpilog_' + run_timestamp + '.txt'), 'a+')
+    logfile = open(os.path.join('logs', 'rpilog_' +
+                                run_timestamp + '.txt'), 'a+')
 
-    ## Initialisation - RPi Comms
+    # Initialisation - RPi Comms
     commsList = []
     commsList.append(ArduinoComm(port=arduino_port))
     commsList.append(AndroidComm())
@@ -82,8 +86,10 @@ if __name__ == '__main__':
     APPLET = 2
 
     msgQueue = Queue()
-    arduinoListener = Process(target=listen, args=(msgQueue, commsList[ARDUINO]))
-    androidListener = Process(target=listen, args=(msgQueue, commsList[ANDROID]))
+    arduinoListener = Process(
+        target=listen, args=(msgQueue, commsList[ARDUINO]))
+    androidListener = Process(
+        target=listen, args=(msgQueue, commsList[ANDROID]))
     appletListener = Process(target=listen, args=(msgQueue, commsList[APPLET]))
 
     arduinoListener.start()
@@ -98,14 +104,14 @@ if __name__ == '__main__':
         if f.endswith(".jpg"):
             os.remove(os.path.join(imagedir, f))
 
-    ## Initialise variables
+    # Initialise variables
     running = True
     exploring = False
     obsHex = ''
     expHex = ''
     imgs = ''
-    # index = 0
-    correctImages = [] # Array to send raw image data
+    # index = 0 # for saving all images
+    correctImages = []  # Array to send raw image data
     correctIdx = []
 
     try:
@@ -129,39 +135,46 @@ if __name__ == '__main__':
                 msg = json.loads(value)
                 com = msg['com']
 
-                ## W, A, D: From Android or Applet
+                # W, A, D: From Android or Applet
                 if com == 'W':
                     # Move forward
                     commsList[ARDUINO].write('W')
-                    commsList[ANDROID].write('{"com": "statusUpdate", "status": "Moving forward"}')
+                    commsList[ANDROID].write(
+                        '{"com": "statusUpdate", "status": "Moving forward"}')
 
                 elif com == 'A':
                     # Turn left
                     commsList[ARDUINO].write('A')
-                    commsList[ANDROID].write(';{"com": "statusUpdate", "status": "Turning left"}')
+                    commsList[ANDROID].write(
+                        ';{"com": "statusUpdate", "status": "Turning left"}')
 
                 elif com == 'D':
                     # Turn right
                     commsList[ARDUINO].write('D')
-                    commsList[ANDROID].write(';{"com": "statusUpdate", "status": "Turning right"}')
+                    commsList[ANDROID].write(
+                        ';{"com": "statusUpdate", "status": "Turning right"}')
 
-                ## Exploration and Fastest Path: From Android and Applet
+                # Exploration and Fastest Path: From Android and Applet
                 elif com == 'ex':
                     # Start Explore
                     if exploring == False:
-                        commsList[ANDROID].write(';{"com": "statusUpdate", "status": "Exploring"}')
-                        commsList[APPLET].write('{"com": "statusUpdate", "status": "Exploring"}')
+                        commsList[ANDROID].write(
+                            ';{"com": "statusUpdate", "status": "Exploring"}')
+                        commsList[APPLET].write(
+                            '{"com": "statusUpdate", "status": "Exploring"}')
                         exploring = True
 
                 elif com == 'fp':
                     # Start Fastest Path
-                    commsList[ANDROID].write(';{"com": "statusUpdate", "status": "Running Fastest Path"}')
-                    commsList[APPLET].write('{"com": "statusUpdate", "status": "Running Fastest Path"}')
-                ## Additional command: Applet send path to Arduino
+                    commsList[ANDROID].write(
+                        ';{"com": "statusUpdate", "status": "Running Fastest Path"}')
+                    commsList[APPLET].write(
+                        '{"com": "statusUpdate", "status": "Running Fastest Path"}')
+                # Additional command: Applet send path to Arduino
                 elif com == 'fpath':
                     commsList[ARDUINO].write(msg['path'])
 
-                ## Sensor Data: From Arduino
+                # Sensor Data: From Arduino
                 elif com == 'SD':
                     commsList[APPLET].write(json.dumps(msg))
 
@@ -171,8 +184,8 @@ if __name__ == '__main__':
                     data['status'] = "Finish Move"
                     commsList[APPLET].write(json.dumps(data))
 
-                ## Way point and Starting point: From Android
-                ## Check if WM might want to send without formatting data
+                # Way point and Starting point: From Android
+                # Check if WM might want to send without formatting data
                 elif com == 'wayPoint':
                     # Received waypoint
                     wp = msg['wayPoint']
@@ -189,21 +202,22 @@ if __name__ == '__main__':
                     # Force get sensor data from arduino
                     commsList[ARDUINO].write('K')
 
-                ## R, F, C: all calibration - from Applet or Arduino
-                elif com == 'R': # R got right, F for front
+                # R, F, C: all calibration - from Applet or Arduino
+                elif com == 'R':  # R got right, F for front
                     commsList[ARDUINO].write('R')
 
-                elif com == 'F': #nobangwallszxc
+                elif com == 'F':  # nobangwallszxc
                     commsList[ARDUINO].write('F')
 
-                elif com == 'f': #nobangblockszxc
+                elif com == 'f':  # nobangblockszxc
                     commsList[ARDUINO].write('f')
 
                 elif com == 'C':
                     if msg['from'] == 'Applet':
                         commsList[ARDUINO].write('C')
                     elif msg['from'] == 'Arduino':
-                        commsList[APPLET].write('{"com":"statusUpdate", "status":"Finish Calibrate"}')
+                        commsList[APPLET].write(
+                            '{"com":"statusUpdate", "status":"Finish Calibrate"}')
 
                 elif com == 'Q':
                     commsList[ARDUINO].write('Q')
@@ -211,18 +225,20 @@ if __name__ == '__main__':
                 elif com == 'RST':
                     exploring = False
 
-                ## G, H: EX -> FP transition (from Applet)
+                # G, H: EX -> FP transition (from Applet)
                 elif com == 'G':
                     exploring = False
                     commsList[ARDUINO].write('G')
-                    commsList[APPLET].write('{"com":"statusUpdate", "status":"calibrated for FP"}')
-                    commsList[ANDROID].write(';{"com":"statusUpdate", "status":"Exploration Complete"}')
+                    commsList[APPLET].write(
+                        '{"com":"statusUpdate", "status":"calibrated for FP"}')
+                    commsList[ANDROID].write(
+                        ';{"com":"statusUpdate", "status":"Exploration Complete"}')
 
                     jsonExpHex = " Exp " + expHex
                     jsonObsHex = ", Obj " + obsHex
                     jsonImgs = ", Img " + str(imgs)
 
-                    ## We try this - send at once
+                    # We try this - send at once
                     jsonString = jsonExpHex + jsonObsHex + jsonImgs
                     data = {'com': 'statusUpdate', 'status': jsonString}
                     commsList[ANDROID].write(json.dumps(data))
@@ -230,40 +246,48 @@ if __name__ == '__main__':
                 elif com == 'H':
                     exploring = False
                     commsList[ARDUINO].write('H')
-                    commsList[APPLET].write('{"com":"statusUpdate", "status":"calibrated for FP"}')
-                    commsList[ANDROID].write(';{"com":"statusUpdate", "status":"Exploration Complete"}')
+                    commsList[APPLET].write(
+                        '{"com":"statusUpdate", "status":"calibrated for FP"}')
+                    commsList[ANDROID].write(
+                        ';{"com":"statusUpdate", "status":"Exploration Complete"}')
 
                     jsonExpHex = " Exp " + expHex
                     jsonObsHex = ", Obj " + obsHex
                     jsonImgs = ", Img " + str(imgs)
 
-                    ## We try this - send at once
+                    # We try this - send at once
                     jsonString = jsonExpHex + jsonObsHex + jsonImgs
                     data = {'com': 'statusUpdate', 'status': jsonString}
                     commsList[ANDROID].write(json.dumps(data))
 
-                ## MDF: From Applet to Android
+                # MDF: From Applet to Android
                 elif com == 'MDF':
                     commsList[ANDROID].write(json.dumps(msg))
 
-                ## Android request for raw images, send them an array of JSON strings
-                ## Update: Change to Applet (WiFi) - Bluetooth will have packet loss since they can receive in max 1KB packets
+                # Android request for raw images, send them an array of JSON strings
+                # Update: Change to Applet (WiFi) - Bluetooth will have packet loss since they can receive in max 1KB packets
                 elif msg['com'] == 'M':
                     correctImages = SendRawImages(correctImages)
                     data = {'com': 'Raw Image String', 'imgRaw': correctImages}
                     commsList[APPLET].write(json.dumps(data))
 
                 elif msg['com'] == 'IR':
-                    commsList[ANDROID].write(';{"com": "statusUpdate", "status": "Running Image Recognition"}')
-                    commsList[APPLET].write('{"com": "statusUpdate", "status": "Running Image Recognition"}')
+                    commsList[ANDROID].write(
+                        ';{"com": "statusUpdate", "status": "Running Image Recognition"}')
+                    commsList[APPLET].write(
+                        '{"com": "statusUpdate", "status": "Running Image Recognition"}')
 
                 elif msg['com'] == 'I':
-                    rawCapture = PiRGBArray(camera) #, size=camera.resolution)
+                    # , size=camera.resolution)
+                    rawCapture = PiRGBArray(camera)
                     camera.capture(rawCapture, 'bgr')
                     image = rawCapture.array
-                    img1 = image[120:, 0:139, :]
-                    img2 = image[120:, 139:277, :]
-                    img3 = image[120:, 277:416, :]
+                    # img1 = image[120:, 0:139, :]
+                    # img2 = image[120:, 139:277, :]
+                    # img3 = image[120:, 277:416, :]
+                    img1 = image[100:, 0:150, :]
+                    img2 = image[100:, 150:260, :]
+                    img3 = image[100:, 250:330, :]
 
                     rect1, leftprediction = imageRec.predict(img1)
                     rect2, midprediction = imageRec.predict(img2)
@@ -283,14 +307,21 @@ if __name__ == '__main__':
 
                     for i, rect in enumerate(rects):
                         if rect is not None:
-                            image = cv2.rectangle(image, (i * 120 + rect[0], 120 + rect[1]), (i * 120 + rect[2], 120 + rect[3]), (0,255,0), 2)
-                        if ids[i] > 0: # Don't save those that default return 0
-                            if ids[i] not in correctIdx: # Following Algo - save first instance instead of overwriting
-                                cv2.imwrite(os.path.join(imagedir, str(ids[i]) + '.jpg'), image)
+                            image = cv2.rectangle(
+                                image, (i * 120 + rect[0], 120 + rect[1]), (i * 120 + rect[2], 120 + rect[3]), (0, 255, 0), 2)
+                        if ids[i] > 0:  # Don't save those that default return 0
+                            # Following Algo - save first instance instead of overwriting
+                            if ids[i] not in correctIdx:
+                                cv2.imwrite(os.path.join(
+                                    imagedir, str(ids[i]) + '.jpg'), image)
                                 correctIdx.append(ids[i])
                                 print("Image saved: " + str(ids[i]) + '.jpg')
+                        # cv2.imwrite(os.path.join(
+                        #     imagedir, str(ids[i]) + '.jpg'), image)
+                        # print("Image saved")
                     # index = index + 1
-                    data = {'com':'Image Taken', 'left': leftprediction,'middle': midprediction, 'right':rightprediction}
+                    data = {'com': 'Image Taken', 'left': leftprediction,
+                            'middle': midprediction, 'right': rightprediction}
                     commsList[APPLET].write(json.dumps(data))
                     print('Left Prediction: ', leftprediction)
                     print('Middle Prediction: ', midprediction)
