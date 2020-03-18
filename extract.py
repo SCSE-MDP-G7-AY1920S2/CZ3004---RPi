@@ -20,10 +20,10 @@ def extractBoundingBox(img):
         area = rect[2] * rect[3]
         ratio = float(rect[2]) / float(rect[3])
 
-        # if area < 100 or area > 15000 or ratio > 1.3:
-        #     continue
-        if area < 200 or area > 15000 or ratio > 1.3:
+        if area < 100 or area > 15000 or ratio > 1.3:
             continue
+        # if area < 200 or area > 15000 or ratio > 1.3:
+        #     continue
 
         if (ratio >= 0.4 and ratio <= 0.5):
             # 1
@@ -47,14 +47,14 @@ def extractBoundingBox(img):
             bb = (rect[0], rect[1], rect[0] + rect[2], rect[1] + rect[3])
             bbs.append(bb)
 
-        # elif (ratio >=0.90 and ratio <=1.1):
-        #     #Up, DOwn, Left, RIGHT sTOP
-        #     if area < 2500 or area > 7500:
-        #         continue
-        elif (ratio >= 0.90 and ratio <= 1.05):
+        elif (ratio >= 0.90 and ratio <= 1.1):
             # Up, DOwn, Left, RIGHT sTOP
-            if area < 950 or area > 7500:
+            if area < 2500 or area > 7500:
                 continue
+        # elif (ratio >= 0.90 and ratio <= 1.05):
+        #     # Up, DOwn, Left, RIGHT sTOP
+        #     if area < 950 or area > 7500:
+        #         continue
 
             bb = (rect[0], rect[1], rect[0] + rect[2], rect[1] + rect[3])
             bbs.append(bb)
