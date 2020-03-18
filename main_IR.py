@@ -281,6 +281,8 @@ if __name__ == '__main__':
                     # , size=camera.resolution)
                     rawCapture = PiRGBArray(camera)
                     camera.capture(rawCapture, 'bgr')
+                    # camera.capture(rawCapture, format='bgr',
+                    #                use_video_port=True)
                     image = rawCapture.array
                     # img1 = image[120:, 0:139, :]
                     # img2 = image[120:, 139:277, :]
@@ -288,6 +290,7 @@ if __name__ == '__main__':
                     img1 = image[100:, 0:150, :]
                     img2 = image[100:, 150:260, :]
                     img3 = image[100:, 250:330, :]
+                    # img3 = image[100:, 250:416, :]
 
                     rect1, leftprediction = imageRec.predict(img1)
                     rect2, midprediction = imageRec.predict(img2)
@@ -304,16 +307,20 @@ if __name__ == '__main__':
                     ids.append(rightprediction)
 
                     print(rects, ids)
+                    shift = [0, 150, 250]
 
                     for i, rect in enumerate(rects):
+                        img_copy = image.copy()
                         if rect is not None:
-                            image = cv2.rectangle(
-                                image, (i * 120 + rect[0], 120 + rect[1]), (i * 120 + rect[2], 120 + rect[3]), (0, 255, 0), 2)
+                            cv2.rectangle(
+                                img_copy, (shift[i] + rect[0], 100 + rect[1]), (shift[i] + rect[2], 100 + rect[3]), (0, 0, 255), 2)
+                            # image = cv2.rectangle(
+                            #     image, (i * 120 + rect[0], 120 + rect[1]), (i * 120 + rect[2], 120 + rect[3]), (0, 255, 0), 2)
                         if ids[i] > 0:  # Don't save those that default return 0
                             # Following Algo - save first instance instead of overwriting
                             if ids[i] not in correctIdx:
                                 cv2.imwrite(os.path.join(
-                                    imagedir, str(ids[i]) + '.jpg'), image)
+                                    imagedir, str(ids[i]) + '.jpg'), img_copy)
                                 correctIdx.append(ids[i])
                                 print("Image saved: " + str(ids[i]) + '.jpg')
                         # cv2.imwrite(os.path.join(
