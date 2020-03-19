@@ -2,13 +2,15 @@ import base64
 import os
 import glob
 
-def SendRawImages(imgDict):
+# def SendRawImages(imgDict):
+def SendRawImages():
     os.chdir("/home/pi/RPi_v2/correct_images")
+    imgDict = {}
 
     for f_name in glob.glob('*.jpg'):
         with open(f_name, "rb") as img_file:
             file_name = f_name
-            encoded_string = base64.b64encode(img_file.read())
+            encoded_string = str(base64.b64encode(img_file.read()))
             # imglist.append(str(encoded_string))
             imgDict[file_name[:-4]] = encoded_string
     # print(correctImages[0])
