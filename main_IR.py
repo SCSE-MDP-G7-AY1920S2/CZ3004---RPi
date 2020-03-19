@@ -86,10 +86,8 @@ if __name__ == '__main__':
     APPLET = 2
 
     msgQueue = Queue()
-    arduinoListener = Process(
-        target=listen, args=(msgQueue, commsList[ARDUINO]))
-    androidListener = Process(
-        target=listen, args=(msgQueue, commsList[ANDROID]))
+    arduinoListener = Process(target=listen, args=(msgQueue, commsList[ARDUINO]))
+    androidListener = Process(target=listen, args=(msgQueue, commsList[ANDROID]))
     appletListener = Process(target=listen, args=(msgQueue, commsList[APPLET]))
 
     arduinoListener.start()
@@ -111,8 +109,9 @@ if __name__ == '__main__':
     expHex = ''
     imgs = ''
     # index = 0 # for saving all images
-    correctImages = []  # Array to send raw image data
+    # correctImages = []  # Array to send raw image data
     correctIdx = []
+    imageDict = {} # Change to dictionary sending raw image data
 
     try:
         while running:
@@ -267,7 +266,8 @@ if __name__ == '__main__':
                 # Android request for raw images, send them an array of JSON strings
                 # Update: Change to Applet (WiFi) - Bluetooth will have packet loss since they can receive in max 1KB packets
                 elif msg['com'] == 'M':
-                    correctImages = SendRawImages(correctImages)
+                    # correctImages = SendRawImages(correctImages)
+                    correctImages = SendRawImages(imageDict)
                     data = {'com': 'Raw Image String', 'imgRaw': correctImages}
                     commsList[APPLET].write(json.dumps(data))
 
