@@ -109,9 +109,7 @@ if __name__ == '__main__':
     expHex = ''
     imgs = ''
     # index = 0 # for saving all images
-    # correctImages = []  # Array to send raw image data
     correctIdx = []
-    imageDict = {} # Change to dictionary sending raw image data
 
     try:
         while running:
@@ -177,7 +175,7 @@ if __name__ == '__main__':
                 elif com == 'SD':
                     commsList[APPLET].write(json.dumps(msg))
 
-                ## Sensor Data: From Arduino, after each move.
+                # Sensor Data: From Arduino, after each move.
                 elif com == 'MF':
                     data = deepcopy(msg)
                     data['status'] = "Finish Move"
@@ -267,8 +265,8 @@ if __name__ == '__main__':
                 # Update: Change to Applet (WiFi) - Bluetooth will have packet loss since they can receive in max 1KB packets
                 elif msg['com'] == 'M':
                     # correctImages = SendRawImages(correctImages)
-                    correctImages = SendRawImages(imageDict)
-                    data = {'com': 'Raw Image String', 'imgRaw': correctImages}
+                    imageDict = SendRawImages()
+                    data = {'com': 'Raw Image String', 'imgRaw': imageDict}
                     commsList[APPLET].write(json.dumps(data))
 
                 elif msg['com'] == 'IR':
@@ -280,17 +278,17 @@ if __name__ == '__main__':
                 elif msg['com'] == 'I':
                     # , size=camera.resolution)
                     rawCapture = PiRGBArray(camera)
-                    camera.capture(rawCapture, 'bgr')
-                    # camera.capture(rawCapture, format='bgr',
-                    #                use_video_port=True)
+                    # camera.capture(rawCapture, 'bgr')
+                    camera.capture(rawCapture, format='bgr',
+                                   use_video_port=True)
                     image = rawCapture.array
                     # img1 = image[120:, 0:139, :]
                     # img2 = image[120:, 139:277, :]
                     # img3 = image[120:, 277:416, :]
                     img1 = image[100:, 0:150, :]
                     img2 = image[100:, 150:260, :]
-                    img3 = image[100:, 250:330, :]
-                    # img3 = image[100:, 250:416, :]
+                    # img3 = image[100:, 250:330, :]
+                    img3 = image[100:, 250:416, :]
 
                     rect1, leftprediction = imageRec.predict(img1)
                     rect2, midprediction = imageRec.predict(img2)
