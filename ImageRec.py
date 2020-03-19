@@ -41,9 +41,10 @@ class IMAGEREC():
             values, predictions = torch.max(predictions, 1)
             score, index = values.max(0)
             # if score >= 0.5:
-            #     print(score)
-            if score < 0.9:
+            print(score, self.classes[predictions[index]])
+            if score < 0.97:
                 # return (None, 0, score)
+                print(score, self.classes[predictions[index]])
                 return None, 0
 
             return rects[index], self.classes[predictions[index]]
