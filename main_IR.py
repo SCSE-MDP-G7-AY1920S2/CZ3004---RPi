@@ -216,8 +216,11 @@ if __name__ == '__main__':
                         commsList[APPLET].write(
                             '{"com":"statusUpdate", "status":"Finish Calibrate"}')
 
-                elif com == 'Q':
+                elif com == 'Q': # calibrate start for exploration.
                     commsList[ARDUINO].write('Q')
+
+                elif com == 'q': # calibrate start for fastest path.
+                    commsList[ARDUINO].write('q')
 
                 elif com == 'RST':
                     exploring = False

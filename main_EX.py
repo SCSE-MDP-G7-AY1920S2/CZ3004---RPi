@@ -188,12 +188,15 @@ if __name__ == '__main__':
                     elif msg['from'] == 'Arduino':
                         commsList[APPLET].write('{"com":"statusUpdate", "status":"Finish Calibrate"}')
 
-                elif com == 'Q':
+                elif com == 'Q': # calibrate start for exploration.
                     commsList[ARDUINO].write('Q')
                     # if msg['from'] == 'Applet':
                     #     commsList[ARDUINO].write('Q')
                     # elif msg['from'] == 'Arduino':
                     #     commsList[APPLET].write('{"com":"statusUpdate", "status":"Finish Calibrate (Right-facing)"}')
+
+                elif com == 'q': # calibrate start for fastest path.
+                    commsList[ARDUINO].write('q')
 
                 elif com == 'RST':
                     exploring = False
